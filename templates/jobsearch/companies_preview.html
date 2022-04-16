@@ -4,11 +4,12 @@
     {% for company in companies %}
     <div class="col-6 col-md-6 col-lg-3">
         <div class="card pt-4 text-center mb-4">
-            <a href="#" style="max-width: 150px;" class="mx-auto d-block">
-                <img class="mx-auto d-block mw-100" src="../static/logo2.png" alt="">
+            <a href="{% url 'company_detail' company.id %}" style="max-width: 150px;" class="mx-auto d-block">
+                {%  load static %}
+                <img class="mx-auto d-block mw-100" src={% static company.logo %} alt="">
             </a>
             <div class="card-body">
-                <p class="card-text"><a href="#">company.count_vacancy</a></p>
+                <p class="card-text"><a href="{% url 'company_detail' company.id %}">{{ company.count_vacancies }}</a></p>
             </div>
         </div>
     </div>

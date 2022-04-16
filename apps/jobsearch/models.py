@@ -8,6 +8,10 @@ class Company(models.Model):
     description = models.TextField()
     employee_count = models.IntegerField()
 
+    @property
+    def count_vacancies(self):
+        return Vacancy.objects.filter(company=self.id).count()
+
 
 class Specialty (models.Model):
     class SpecialtyChoises(models.TextChoices):
@@ -23,6 +27,10 @@ class Specialty (models.Model):
     code = models.CharField(max_length=15, choices=SpecialtyChoises.choices, primary_key=True)
     title = models.CharField(max_length=100)
     picture = models.URLField(default='https://place-hold.it/100x60')
+
+    @property
+    def count_vacancies(self):
+        return Vacancy.objects.filter(specialty=self.code).count()
 
 
 class Vacancy(models.Model):

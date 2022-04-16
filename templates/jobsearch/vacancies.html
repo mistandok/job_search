@@ -1,8 +1,12 @@
-{% extends 'jobsearh/base.html' %}
+{% extends 'jobsearch/base.html' %}
 {% block content %}
 <section>
-    <h1 class="h1 text-center mx-auto mt-4 pt-5" style="font-size: 70px;"><strong>{{ specialty.title }}</strong></h1>
-    <p class="text-center pt-1">{{ specialty.count_vacancies }}</p>
+    {% if title %}
+    <h1 class="h1 text-center mx-auto mt-4 pt-5" style="font-size: 70px;"><strong>{{ title }}</strong></h1>
+    {% else %}
+    <h1 class="h1 text-center mx-auto mt-4 pt-5" style="font-size: 70px;"><strong>Все вакансии</strong></h1>
+    {% endif %}
+    <p class="text-center pt-1">{{ vacancy_list.count }} вакансий</p>
 
     {% include 'jobsearch/vacancies_list.html' %}
 
