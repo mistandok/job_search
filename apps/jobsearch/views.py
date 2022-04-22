@@ -38,7 +38,9 @@ class ListSpecialtyVacancyView(ListView):
 class DetailVacancyView(DetailView):
     model = Vacancy
     template_name = 'jobsearch/vacancy.html'
-    queryset = Vacancy.objects.select_related()
+    
+    def get_queryset(self):
+        return super().get_queryset().select_related()
 
 
 class DetailCompanyView(DetailView):
