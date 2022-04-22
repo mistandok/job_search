@@ -8,7 +8,8 @@
             <img class="mx-auto d-block" src={% static specialty.picture %} width="80" height="80" alt="">
             <div class="card-body">
                 <p class="card-text mb-2">{{ specialty.title }}</p>
-                <p class="card-text"><a href="{% url 'vacancies_for_specialty' specialty.code %}">{{ specialty.count_vacancies }}</a></p>
+                {% load jobsearch_extras %}
+                <p class="card-text"><a href="{% url 'vacancies_for_specialty' specialty.code %}">{{ specialty.count_vacancies }} {{ specialty.count_vacancies|plural_ru:"вакансия" }}</a></p>
             </div>
         </div>
     </div>

@@ -1,3 +1,4 @@
+from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, TemplateView
@@ -10,8 +11,9 @@ class StartPageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(StartPageView, self).get_context_data(**kwargs)
-        context['specialties'] = Specialty.objects.all()
-        context['companies'] = Company.objects.all()
+        context['specialties'] = Specialty.objects.annotate(count_vacancies=Count('vacancies')).all()
+        context['companies'] = Company.objects.annotate(count_vacancies=Count('vacancies')).all()
+        context['search_examples'] = ['Python', 'Flask', 'Django', 'Парсинг', 'ML']
         return context
 
 
@@ -25,11 +27,11 @@ class ListSpecialtyVacancyView(ListView):
     template_name = 'jobsearch/vacancies.html'
 
     def get_queryset(self):
-        return super().get_queryset().filter(specialty=self.kwargs.get('specialty'))
+        return super().get_queryset().filter(specialty__code=self.kwargs.get('specialty'))
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ListSpecialtyVacancyView, self).get_context_data(**kwargs)
-        context['title'] = get_object_or_404(Specialty, pk=self.kwargs.get('specialty')).title
+        context['title'] = get_object_or_404(Specialty, code=self.kwargs.get('specialty')).title
         return context
 
 
@@ -42,7 +44,9 @@ class DetailVacancyView(DetailView):
 class DetailCompanyView(DetailView):
     model = Company
     template_name = 'jobsearch/company.html'
-    queryset = Company.objects.select_related()
+
+    def get_queryset(self):
+        return super().get_queryset().select_related().annotate(count_vacancies=Count('vacancies'))
 
     def get_context_data(self, **kwargs):
         context = super(DetailCompanyView, self).get_context_data(**kwargs)
@@ -53,9 +57,22 @@ class DetailCompanyView(DetailView):
 def handler404_view(request, *args, **kwargs):
     response = render(
         request,
-        'tours/404.html',
+        'jobsearch/404.html',
         context={
+            'information': 'Эта информация не представлена на сайте :('
         }
     )
     response.status_code = 404
+    return response
+
+
+def handler500_view(request, *args, **kwargs):
+    response = render(
+        request,
+        'jobsearch/500.html',
+        context={
+            'information': 'Ой-ей, скоро мы это исправим!'
+        }
+    )
+    response.status_code = 500
     return response

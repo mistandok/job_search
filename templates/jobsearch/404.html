@@ -1,0 +1,12 @@
+{% extends 'jobsearch/base.html' %}
+{% block content %}
+<main class="container">
+    <div class="d-flex flex-column justify-content-center">
+        {%  load static %}
+        <div class="d-flex justify-content-center"><img src="{% static 'admin/errors/404.jpg' %}" class="img-fluid" alt="Responsive image"></div>
+        {% if information %}
+        <div class="d-flex justify-content-center"><h4>{{ information }}</h4></div>
+        {% endif %}
+    </div>
+</main>
+{% endblock %}

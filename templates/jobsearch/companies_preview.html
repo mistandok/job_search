@@ -9,7 +9,8 @@
                 <img class="mx-auto d-block mw-100" src={% static company.logo %} alt="">
             </a>
             <div class="card-body">
-                <p class="card-text"><a href="{% url 'company_detail' company.id %}">{{ company.count_vacancies }}</a></p>
+                {% load jobsearch_extras %}
+                <p class="card-text"><a href="{% url 'company_detail' company.id %}">{{ company.count_vacancies }} {{ company.count_vacancies|plural_ru:"вакансия" }}</a></p>
             </div>
         </div>
     </div>

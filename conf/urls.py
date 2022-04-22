@@ -14,9 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+
 from apps.jobsearch.views import (
-    StartPageView, ListVacancyView, DetailVacancyView, DetailCompanyView, ListSpecialtyVacancyView
+    StartPageView, ListVacancyView, DetailVacancyView, DetailCompanyView, ListSpecialtyVacancyView,
+    handler404_view, handler500_view
 )
 
 urlpatterns = [
@@ -27,3 +29,6 @@ urlpatterns = [
     path('vacancies/<int:pk>', DetailVacancyView.as_view(), name='vacancy_detail'),
     path('companies/<int:pk>', DetailCompanyView.as_view(), name='company_detail'),
 ]
+
+handler404 = handler404_view
+handler500 = handler500_view

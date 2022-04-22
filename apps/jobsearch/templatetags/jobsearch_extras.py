@@ -1,5 +1,5 @@
 from django import template
-from ..service.plural import plural_word
+from ..helpers.plural import plural_word
 
 register = template.Library()
 
