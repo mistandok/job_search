@@ -26,6 +26,11 @@ class Specialty (models.Model):
     title = models.CharField(max_length=100)
     picture = models.URLField(default='https://place-hold.it/100x60')
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['code']),
+        ]
+
 
 class Vacancy(models.Model):
     title = models.CharField(max_length=100)
