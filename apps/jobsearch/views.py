@@ -27,7 +27,7 @@ class ListSpecialtyVacancyView(ListView):
     template_name = 'jobsearch/vacancies.html'
 
     def get_queryset(self):
-        return super().get_queryset().filter(specialty__code=self.kwargs.get('specialty'))
+        return super().get_queryset().filter(specialty__code=self.kwargs.get('specialty')).select_related()
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ListSpecialtyVacancyView, self).get_context_data(**kwargs)

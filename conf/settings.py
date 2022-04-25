@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
+INTERNAL_IPS = ['127.0.0.1']
+
 
 # Application definition
 
@@ -37,9 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.jobsearch',
+
     'pytils',
     'crispy_forms',
+    'django_extensions',
+
+    'apps.jobsearch',
 ]
 
 MIDDLEWARE = [
@@ -51,6 +56,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+if DEBUG:
+    INSTALLED_APPS += [
+        'debug_toolbar',
+    ]
+    MIDDLEWARE += [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ]
+
 
 ROOT_URLCONF = 'conf.urls'
 
