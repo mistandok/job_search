@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import CheckConstraint, Q, F
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Company(models.Model):
@@ -9,6 +11,7 @@ class Company(models.Model):
     logo = models.URLField(default='https://place-hold.it/100x60')
     description = models.TextField()
     employee_count = models.IntegerField()
+    owner = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='company', null=True)
 
 
 class Specialty (models.Model):
@@ -51,3 +54,11 @@ class Vacancy(models.Model):
         super().clean()
         if self.salary_min > self.salary_max:
             raise ValidationError({'salary_max': 'Максимальная зарплата не может быть меньше, чем минимальная.'})
+
+
+class Application(models.Model):
+    written_username = models.CharField(max_length=100)
+    written_phone = PhoneNumberField()
+    written_cover_letter = models.TextField()
+    vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE, related_name='applications')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='applications')

@@ -31,6 +31,10 @@ urlpatterns = [
     path('companies/<int:pk>', DetailCompanyView.as_view(), name='company_detail'),
 ]
 
+# user
+urlpatterns += [
+]
+
 if settings.DEBUG:
     urlpatterns += [
         path('__debug__/', include('debug_toolbar.urls')),

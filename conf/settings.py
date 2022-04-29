@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'pytils',
     'crispy_forms',
     'django_extensions',
+    'phonenumber_field',
 
     'apps.jobsearch',
 ]
@@ -138,10 +139,17 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
-    BASE_DIR / 'static/admin/specialty'
 ]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# crispy-form settings
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# phonenumber settings
+PHONENUMBER_DEFAULT_REGION = 'RU'
+PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'
+PHONENUMBER_DB_FORMAT = 'NATIONAL'
