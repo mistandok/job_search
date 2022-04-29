@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'phonenumber_field',
 
+    'apps.accounts',
     'apps.jobsearch',
 ]
 
