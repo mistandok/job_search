@@ -8,7 +8,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 class Company(models.Model):
     name = models.CharField(max_length=100)
     location = models.CharField(max_length=100)
-    logo = models.URLField(default='https://place-hold.it/100x60')
+    logo = models.ImageField(upload_to=settings.MEDIA_COMPANY_IMAGE_DIR)
     description = models.TextField()
     employee_count = models.IntegerField()
     owner = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='company', null=True)
@@ -27,7 +27,7 @@ class Specialty (models.Model):
 
     code = models.CharField(max_length=15, unique=True, choices=SpecialtyChoises.choices)
     title = models.CharField(max_length=100)
-    picture = models.URLField(default='https://place-hold.it/100x60')
+    picture = models.ImageField(upload_to=settings.MEDIA_SPECIALITY_IMAGE_DIR)
 
     class Meta:
         indexes = [

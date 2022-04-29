@@ -19,14 +19,14 @@ jobs = [
 
 companies = [
 
-    {"id": "1", "name": "WORKIRO", "logo": "admin/logo/logo1.png", "employee_count": "10", "location": "Новосибирск", "description": "Разрабатываем мобильные приложения и сервисы для сферы онлайн-обучения."},
-    {"id": "2", "name": "Rebel Rage", "logo": "admin/logo/logo2.png", "employee_count": "24", "location": "Москва", "description": "Мобильные сервисы, программное обеспечение, веб-сайты, мобильные приложения."},
-    {"id": "3", "name": "Staffing Smarter", "logo": "admin/logo/logo3.png", "employee_count": "123", "location": "Москва", "description": "Сервис онлайн-наблюдения за процессом сдачи экзамена с искусственным интеллектом"},
-    {"id": "4", "name": "EVILTHREATH", "logo": "admin/logo/logo4.png", "employee_count": "36", "location": "Москва", "description": "Лидирующее в России и Восточной Европе ПО для проведения вебинаров и видео-конференций."},
-    {"id": "5", "name": "HIREY", "logo": "admin/logo/logo5.png", "employee_count": "21", "location": "Воронеж", "description": "Телекоммуникационные и платежные сервисы, которые помогают развиваться бизнесам во всем мире."},
-    {"id": "6", "name": "SwiftAttack", "logo": "admin/logo/logo6.png", "employee_count": "79", "location": "Москва", "description": "Разработка сложных веб-сервисов и мобильных приложений"},
-    {"id": "7", "name": "TROLLER", "logo": "admin/logo/logo7.png", "employee_count": "230", "location": "Санкт-Петербург", "description": "Мобильное приложение, позволяющее примерить обувь и выбрать идеальную пару всего в 3 клика"},
-    {"id": "8", "name": "Primal Assault", "logo": "admin/logo/logo8.png", "employee_count": "13", "location": "Москва", "description": "Реализуем проекты любой сложности в digital-сфере" }
+    {"id": "1", "name": "WORKIRO", "logo": "company_images/logo1.png", "employee_count": "10", "location": "Новосибирск", "description": "Разрабатываем мобильные приложения и сервисы для сферы онлайн-обучения."},
+    {"id": "2", "name": "Rebel Rage", "logo": "company_images/logo2.png", "employee_count": "24", "location": "Москва", "description": "Мобильные сервисы, программное обеспечение, веб-сайты, мобильные приложения."},
+    {"id": "3", "name": "Staffing Smarter", "logo": "company_images/logo3.png", "employee_count": "123", "location": "Москва", "description": "Сервис онлайн-наблюдения за процессом сдачи экзамена с искусственным интеллектом"},
+    {"id": "4", "name": "EVILTHREATH", "logo": "company_images/logo4.png", "employee_count": "36", "location": "Москва", "description": "Лидирующее в России и Восточной Европе ПО для проведения вебинаров и видео-конференций."},
+    {"id": "5", "name": "HIREY", "logo": "company_images/logo5.png", "employee_count": "21", "location": "Воронеж", "description": "Телекоммуникационные и платежные сервисы, которые помогают развиваться бизнесам во всем мире."},
+    {"id": "6", "name": "SwiftAttack", "logo": "company_images/logo6.png", "employee_count": "79", "location": "Москва", "description": "Разработка сложных веб-сервисов и мобильных приложений"},
+    {"id": "7", "name": "TROLLER", "logo": "company_images/logo7.png", "employee_count": "230", "location": "Санкт-Петербург", "description": "Мобильное приложение, позволяющее примерить обувь и выбрать идеальную пару всего в 3 клика"},
+    {"id": "8", "name": "Primal Assault", "logo": "company_images/logo8.png", "employee_count": "13", "location": "Москва", "description": "Реализуем проекты любой сложности в digital-сфере" }
 
 ]
 
@@ -34,14 +34,14 @@ companies = [
 
 specialties = [
 
-    {"code": "frontend", "title": "Фронтенд", "picture": "admin/specialty/frontend.png"},
-    {"code": "backend", "title": "Бэкенд", "picture": "admin/specialty/backend.png"},
-    {"code": "gamedev", "title": "Геймдев", "picture": "admin/specialty/gamedev.png"},
-    {"code": "devops", "title": "Девопс", "picture": "admin/specialty/devops.png"},
-    {"code": "design", "title": "Дизайн", "picture": "admin/specialty/design.png"},
-    {"code": "products", "title": "Продукты", "picture": "admin/specialty/products.png"},
-    {"code": "management", "title": "Менеджмент", "picture": "admin/specialty/management.png"},
-    {"code": "testing", "title": "Тестирование", "picture": "admin/specialty/testing.png"},
+    {"code": "frontend", "title": "Фронтенд", "picture": "speciality_images/frontend.png"},
+    {"code": "backend", "title": "Бэкенд", "picture": "speciality_images/backend.png"},
+    {"code": "gamedev", "title": "Геймдев", "picture": "speciality_images/gamedev.png"},
+    {"code": "devops", "title": "Девопс", "picture": "speciality_images/devops.png"},
+    {"code": "design", "title": "Дизайн", "picture": "speciality_images/design.png"},
+    {"code": "products", "title": "Продукты", "picture": "speciality_images/products.png"},
+    {"code": "management", "title": "Менеджмент", "picture": "speciality_images/management.png"},
+    {"code": "testing", "title": "Тестирование", "picture": "speciality_images/testing.png"},
 ]
 
 """ Статусы в формате Enum """
