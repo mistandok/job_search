@@ -1,12 +1,14 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import ListView, DetailView, TemplateView
-from django.views.generic.edit import FormMixin
+from django.views.generic.edit import FormMixin, CreateView, UpdateView
 
-from .forms import ApplicationForm
+from .forms import ApplicationForm, MyCompanyForm
 from .models import Vacancy, Company, Specialty
+from .services.helpers import my_company_redirect_for_user
 
 
 class StartPageView(TemplateView):
@@ -43,7 +45,7 @@ class ListSpecialtyVacancyView(ListView):
 
 class ApplicationView(TemplateView):
     template_name = 'jobsearch/vacancy/application_sended.html'
-    
+
 
 class DetailVacancyView(FormMixin, DetailView):
     model = Vacancy
@@ -87,12 +89,58 @@ class DetailCompanyView(DetailView):
     template_name = 'jobsearch/company/company.html'
 
     def get_queryset(self):
-        return super().get_queryset().select_related().annotate(count_vacancies=Count('vacancies'))
+        return super().get_queryset().annotate(count_vacancies=Count('vacancies'))
 
     def get_context_data(self, **kwargs):
         context = super(DetailCompanyView, self).get_context_data(**kwargs)
-        context['vacancy_list'] = Vacancy.objects.filter(company=self.get_object())
+        context['vacancy_list'] = self.get_object().vacancies.all()
         return context
+
+
+class MyCompanyLetsStartView(LoginRequiredMixin, TemplateView):
+    login_url = 'login'
+    template_name = 'jobsearch/company/company-create.html'
+
+    @my_company_redirect_for_user(is_company_should_exist=True, redirect_to='my_company_edit')
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+
+class MyCompanyCreateView(LoginRequiredMixin, CreateView):
+    login_url = 'login'
+    template_name = 'jobsearch/company/company-edit.html'
+
+    form_class = MyCompanyForm
+
+    @my_company_redirect_for_user(is_company_should_exist=True, redirect_to='my_company_edit')
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('my_company_edit')
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        form.save()
+        return super(MyCompanyCreateView, self).form_valid(form)
+
+
+class MyCompanyUpdateView(LoginRequiredMixin, UpdateView):
+    login_url = 'login'
+    template_name = 'jobsearch/company/company-edit.html'
+
+    model = Company
+    form_class = MyCompanyForm
+
+    @my_company_redirect_for_user(is_company_should_exist=False, redirect_to='my_company_lets_start')
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def get_object(self, queryset=None):
+        return self.model.objects.get(owner=self.request.user)
+
+    def get_success_url(self):
+        return reverse('my_company_edit')
 
 
 def handler404_view(request, *args, **kwargs):

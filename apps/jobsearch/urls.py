@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.urls import path
 
 from apps.jobsearch.views import (
-    StartPageView, ListVacancyView, DetailVacancyView, DetailCompanyView, ListSpecialtyVacancyView, ApplicationView
+    StartPageView, ListVacancyView, DetailVacancyView, DetailCompanyView,
+    ListSpecialtyVacancyView, ApplicationView, MyCompanyCreateView, MyCompanyLetsStartView, MyCompanyUpdateView
 )
 
 urlpatterns = [
@@ -13,4 +14,10 @@ urlpatterns = [
     path('vacancies/<int:pk>', DetailVacancyView.as_view(), name='vacancy_detail'),
     path('vacancies/<int:pk>/send', ApplicationView.as_view(), name='application_sended'),
     path('companies/<int:pk>', DetailCompanyView.as_view(), name='company_detail'),
+]
+
+urlpatterns += [
+    path('mycompany/create', MyCompanyCreateView.as_view(), name='my_company_create'),
+    path('mycompany/letsstart', MyCompanyLetsStartView.as_view(), name='my_company_lets_start'),
+    path('mycompany/', MyCompanyUpdateView.as_view(), name='my_company_edit'),
 ]

@@ -4,7 +4,7 @@ from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
 
-from .models import Application
+from .models import Application, Company
 
 
 class ApplicationForm(forms.ModelForm):
@@ -59,3 +59,51 @@ class ApplicationForm(forms.ModelForm):
             except ObjectDoesNotExist:
                 pass
         return self.cleaned_data
+
+
+class MyCompanyForm(forms.ModelForm):
+    name = forms.CharField(
+        label=_('Название компании'),
+        max_length=100,
+    )
+
+    employee_count = forms.IntegerField(
+        label=_('Количество человек в компании'),
+    )
+
+    location = forms.CharField(
+        label=_('География'),
+        max_length=100,
+    )
+
+    logo = forms.ImageField(
+        label=_('Логотип'),
+        label_suffix=_('Загрузить')
+    )
+
+    description = forms.CharField(
+        label=_('Информация о компании'),
+        widget=forms.Textarea()
+    )
+
+    class Meta:
+        model = Company
+        fields = ['name', 'employee_count', 'location', 'logo', 'description']
+
+    def __init__(self, *args, **kwargs):
+        super(MyCompanyForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+
+        self.helper.layout = Layout(
+            Fieldset(
+                '',
+                'name',
+                'employee_count',
+                'location',
+                'logo',
+                'description'
+            ),
+            ButtonHolder(Submit('submit', 'Сохранить'))
+        )
