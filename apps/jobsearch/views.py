@@ -143,6 +143,15 @@ class MyCompanyUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('my_company_edit')
 
 
+class MyCompanyVacanciesLetsStartView(LoginRequiredMixin, TemplateView):
+    login_url = 'login'
+    template_name = 'jobsearch/vacancy/vacancy-letstart.html'
+
+    @my_company_redirect_for_user(is_company_should_exist=False, redirect_to='my_company_lets_start')
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+
 def handler404_view(request, *args, **kwargs):
     response = render(
         request,
