@@ -1,8 +1,11 @@
 from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
+from django.urls import reverse
 from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic.edit import FormMixin
 
+from .forms import ApplicationForm
 from .models import Vacancy, Company, Specialty
 
 
@@ -19,7 +22,7 @@ class StartPageView(TemplateView):
 
 class ListVacancyView(ListView):
     model = Vacancy
-    template_name = 'jobsearch/vacancies.html'
+    template_name = 'jobsearch/vacancy/vacancies.html'
 
     def get_queryset(self):
         return super().get_queryset().select_related()
@@ -27,7 +30,7 @@ class ListVacancyView(ListView):
 
 class ListSpecialtyVacancyView(ListView):
     model = Vacancy
-    template_name = 'jobsearch/vacancies.html'
+    template_name = 'jobsearch/vacancy/vacancies.html'
 
     def get_queryset(self):
         return super().get_queryset().filter(specialty__code=self.kwargs.get('specialty')).select_related()
@@ -38,17 +41,50 @@ class ListSpecialtyVacancyView(ListView):
         return context
 
 
-class DetailVacancyView(DetailView):
-    model = Vacancy
-    template_name = 'jobsearch/vacancy.html'
+class ApplicationView(TemplateView):
+    template_name = 'jobsearch/vacancy/application_sended.html'
     
+
+class DetailVacancyView(FormMixin, DetailView):
+    model = Vacancy
+    template_name = 'jobsearch/vacancy/vacancy.html'
+    form_class = ApplicationForm
+
     def get_queryset(self):
         return super().get_queryset().select_related()
+
+    def get_success_url(self):
+        return reverse('application_sended', kwargs={'pk': self.object.id})
+
+    def get_context_data(self, **kwargs):
+        context = super(DetailVacancyView, self).get_context_data(**kwargs)
+        context['form'] = kwargs.get('form', ApplicationForm())
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        return self.form_invalid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        kwargs['vacancy'] = self.get_object()
+        return kwargs
+
+    def form_valid(self, form):
+        application = form.save(commit=False)
+        application.user = self.request.user
+        application.vacancy = self.get_object()
+        application.save()
+        return super(DetailVacancyView, self).form_valid(form)
 
 
 class DetailCompanyView(DetailView):
     model = Company
-    template_name = 'jobsearch/company.html'
+    template_name = 'jobsearch/company/company.html'
 
     def get_queryset(self):
         return super().get_queryset().select_related().annotate(count_vacancies=Count('vacancies'))
@@ -62,7 +98,7 @@ class DetailCompanyView(DetailView):
 def handler404_view(request, *args, **kwargs):
     response = render(
         request,
-        'jobsearch/404.html',
+        'jobsearch/error/404.html',
         context={
             'information': 'Эта информация не представлена на сайте :('
         }
@@ -74,7 +110,7 @@ def handler404_view(request, *args, **kwargs):
 def handler500_view(request, *args, **kwargs):
     response = render(
         request,
-        'jobsearch/500.html',
+        'jobsearch/error/500.html',
         context={
             'information': 'Ой-ей, скоро мы это исправим!'
         }

@@ -11,7 +11,7 @@
         {% load jobsearch_extras %}
         <p class="text-center pt-1">Компания, {{ company.location }}, {{ company.count_vacancies }} {{ company.count_vacancies|plural_ru:"вакансия" }}</p>
 
-        {% include 'jobsearch/vacancies_list.html' %}
+        {% include 'jobsearch/vacancy/vacancies_list.html' %}
 
     </section>
 {% endblock %}
