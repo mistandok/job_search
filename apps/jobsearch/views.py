@@ -6,9 +6,9 @@ from django.urls import reverse
 from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import FormMixin, CreateView, UpdateView
 
-from .forms import ApplicationForm, MyCompanyForm
+from .forms import ApplicationForm, MyCompanyForm, MyVacancyForm
 from .models import Vacancy, Company, Specialty
-from .services.helpers import my_company_redirect_for_user
+from .services.helpers import my_company_redirect_for_user, my_vacancy_redirect_for_user
 
 
 class StartPageView(TemplateView):
@@ -150,6 +150,24 @@ class MyCompanyVacanciesLetsStartView(LoginRequiredMixin, TemplateView):
     @my_company_redirect_for_user(is_company_should_exist=False, redirect_to='my_company_lets_start')
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
+
+
+class MyCompanyVacanciesCreateView(LoginRequiredMixin, CreateView):
+    login_url = 'login'
+    template_name = 'jobsearch/vacancy/vacancy-edit.html'
+
+    form_class = MyVacancyForm
+
+    @my_company_redirect_for_user(is_company_should_exist=False, redirect_to='my_company_edit')
+    @my_vacancy_redirect_for_user(is_vacancies_should_exist=True, redirect_to='my_company_edit')
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('my_company_edit')
+
+    def form_valid(self, form):
+        return super(MyCompanyCreateView, self).form_valid(form)
 
 
 def handler404_view(request, *args, **kwargs):

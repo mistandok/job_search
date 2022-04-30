@@ -1,0 +1,20 @@
+{% extends 'jobsearch/edit.html' %}
+{% block edit_content %}
+        <div class="col-12 col-lg-8">
+            <div class="card">
+                <div class="card-body px-4 pb-4">
+                    <!-- Tab -->
+                     <section class="tab-pane fade show active">
+                        <h2 class="h4 pt-2 pb-3">Вакансия</h2>
+                    </section>
+
+                    {% load crispy_forms_tags %}
+
+                    {% crispy form %}
+                    <!-- END Tab -->
+                </div>
+            </div>
+        </div>
+    </div>
+  </main>
+{% endblock %}
