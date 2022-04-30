@@ -21,6 +21,9 @@ class ListVacancyView(ListView):
     model = Vacancy
     template_name = 'jobsearch/vacancies.html'
 
+    def get_queryset(self):
+        return super().get_queryset().select_related()
+
 
 class ListSpecialtyVacancyView(ListView):
     model = Vacancy
