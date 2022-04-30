@@ -99,7 +99,7 @@ class DetailCompanyView(DetailView):
 
 class MyCompanyLetsStartView(LoginRequiredMixin, TemplateView):
     login_url = 'login'
-    template_name = 'jobsearch/company/company-create.html'
+    template_name = 'jobsearch/company/company_create.html'
 
     @my_company_redirect_for_user(is_company_should_exist=True, redirect_to='my_company_edit')
     def get(self, request, *args, **kwargs):
@@ -108,7 +108,7 @@ class MyCompanyLetsStartView(LoginRequiredMixin, TemplateView):
 
 class MyCompanyCreateView(LoginRequiredMixin, CreateView):
     login_url = 'login'
-    template_name = 'jobsearch/company/company-edit.html'
+    template_name = 'jobsearch/company/company_edit.html'
 
     form_class = MyCompanyForm
 
@@ -127,7 +127,7 @@ class MyCompanyCreateView(LoginRequiredMixin, CreateView):
 
 class MyCompanyUpdateView(LoginRequiredMixin, UpdateView):
     login_url = 'login'
-    template_name = 'jobsearch/company/company-edit.html'
+    template_name = 'jobsearch/company/company_edit.html'
 
     model = Company
     form_class = MyCompanyForm
@@ -145,7 +145,7 @@ class MyCompanyUpdateView(LoginRequiredMixin, UpdateView):
 
 class MyCompanyVacanciesLetsStartView(LoginRequiredMixin, TemplateView):
     login_url = 'login'
-    template_name = 'jobsearch/vacancy/vacancy-letstart.html'
+    template_name = 'jobsearch/vacancy/company_vacancy_letstart.html'
 
     @my_company_redirect_for_user(is_company_should_exist=False, redirect_to='my_company_lets_start')
     @my_vacancy_redirect_for_user(is_vacancies_should_exist=True, redirect_to='my_company_vacancies_list')
@@ -155,7 +155,7 @@ class MyCompanyVacanciesLetsStartView(LoginRequiredMixin, TemplateView):
 
 class MyCompanyVacanciesCreateView(LoginRequiredMixin, CreateView):
     login_url = 'login'
-    template_name = 'jobsearch/vacancy/vacancy-edit.html'
+    template_name = 'jobsearch/vacancy/company_vacancy_edit.html'
 
     form_class = MyVacancyForm
 
@@ -172,7 +172,7 @@ class MyCompanyVacanciesCreateView(LoginRequiredMixin, CreateView):
 
 class MyCompanyVacanciesListView(LoginRequiredMixin, ListView):
     login_url = 'login'
-    template_name = 'jobsearch/vacancy/vacancy-list.html'
+    template_name = 'jobsearch/vacancy/company_vacancy_list.html'
 
     model = Vacancy
 
