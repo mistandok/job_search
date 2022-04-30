@@ -148,6 +148,7 @@ class MyCompanyVacanciesLetsStartView(LoginRequiredMixin, TemplateView):
     template_name = 'jobsearch/vacancy/vacancy-letstart.html'
 
     @my_company_redirect_for_user(is_company_should_exist=False, redirect_to='my_company_lets_start')
+    @my_vacancy_redirect_for_user(is_vacancies_should_exist=True, redirect_to='my_company_vacancies_list')
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
@@ -159,7 +160,6 @@ class MyCompanyVacanciesCreateView(LoginRequiredMixin, CreateView):
     form_class = MyVacancyForm
 
     @my_company_redirect_for_user(is_company_should_exist=False, redirect_to='my_company_edit')
-    @my_vacancy_redirect_for_user(is_vacancies_should_exist=True, redirect_to='my_company_edit')
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
@@ -168,6 +168,21 @@ class MyCompanyVacanciesCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         return super(MyCompanyCreateView, self).form_valid(form)
+
+
+class MyCompanyVacanciesListView(LoginRequiredMixin, ListView):
+    login_url = 'login'
+    template_name = 'jobsearch/vacancy/vacancy-list.html'
+
+    model = Vacancy
+
+    @my_company_redirect_for_user(is_company_should_exist=False, redirect_to='my_company_edit')
+    @my_vacancy_redirect_for_user(is_vacancies_should_exist=False, redirect_to='my_company_vacancies_lets_start')
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        return super().get_queryset().filter(company__owner=self.request.user)
 
 
 def handler404_view(request, *args, **kwargs):
