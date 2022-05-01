@@ -1,7 +1,7 @@
 """
 Модуль отвечает за вспомогательные классы и функции для навигации на сайте
 """
-
+from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import redirect
 
@@ -44,3 +44,17 @@ def my_vacancy_redirect_for_user(is_vacancies_should_exist: bool, redirect_to: s
             return func(self, request, *args, **kwargs) if is_vacancies_should_exist else redirect(redirect_to)
         return wrapper
     return decorator
+
+
+def is_correct_company_for_user(company: Company, user: User):
+    """
+    Функция проверяет принадлежит ли компания пользователю
+    :param company: компания
+    :param user: пользователь
+    """
+    try:
+        if company != Company.objects.get(owner=user):
+            return False
+    except ObjectDoesNotExist:
+        return False
+    return True

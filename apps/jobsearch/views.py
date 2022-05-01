@@ -10,7 +10,7 @@ from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import FormMixin, CreateView, UpdateView, DeleteView
 
 from .forms import ApplicationForm, MyCompanyForm, MyVacancyForm, MyVacancyDeleteForm
-from .helpers.navigation import my_company_redirect_for_user, my_vacancy_redirect_for_user
+from .helpers.navigation import my_company_redirect_for_user, my_vacancy_redirect_for_user, is_correct_company_for_user
 from .models import Vacancy, Company, Specialty
 
 
@@ -129,7 +129,7 @@ class MyCompanyCreateView(LoginRequiredMixin, CreateView):
         return super(MyCompanyCreateView, self).form_valid(form)
 
 
-class MyCompanyUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class MyCompanyUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     login_url = 'login'
     template_name = 'jobsearch/company/company_edit.html'
     success_message = 'Компания обновлена'
@@ -197,7 +197,7 @@ class MyCompanyVacanciesUpdateView(LoginRequiredMixin, SuccessMessageMixin, Upda
 
     def get_object(self, queryset=None):
         vacancy = super(MyCompanyVacanciesUpdateView, self).get_object(queryset)
-        if vacancy.company != Company.objects.get(owner=self.request.user):
+        if not is_correct_company_for_user(vacancy.company, self.request.user):
             raise Http404
         return vacancy
 
@@ -219,7 +219,7 @@ class MyCompanyVacanciesDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_object(self, queryset=None):
         vacancy = super(MyCompanyVacanciesDeleteView, self).get_object(queryset)
-        if vacancy.company != Company.objects.get(owner=self.request.user):
+        if not is_correct_company_for_user(vacancy.company, self.request.user):
             raise Http404
         return vacancy
 

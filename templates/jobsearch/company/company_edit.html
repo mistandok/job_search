@@ -6,6 +6,13 @@
                     <!-- Tab -->
                     <section class="tab-pane fade show active">
                         <h2 class="h4 pt-2 pb-3">Информация о&nbsp;компании</h2>
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="text-center alert alert-{{ message.tags }}">
+                                    {{ message|safe }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
                     </section>
 
                     {% load crispy_forms_tags %}
