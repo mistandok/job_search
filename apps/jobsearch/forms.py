@@ -1,10 +1,11 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit
+from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Button
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from .models import Application, Company, Vacancy
+from .models import Application, Company, Vacancy, Specialty
 
 
 class ApplicationForm(forms.ModelForm):
@@ -115,28 +116,39 @@ class MyVacancyForm(forms.ModelForm):
         max_length=100,
     )
 
-    # specialty = forms.Fo(
-    #     label=_('Количество человек в компании'),
-    # )
-    #
-    # location = forms.CharField(
-    #     label=_('География'),
-    #     max_length=100,
-    # )
-    #
-    # logo = forms.ImageField(
-    #     label=_('Логотип'),
-    #     label_suffix=_('Загрузить')
-    # )
-    #
-    # description = forms.CharField(
-    #     label=_('Информация о компании'),
-    #     widget=forms.Textarea()
-    # )
+    specialty = forms.ModelChoiceField(
+        label=_('Специализация'),
+        queryset=Specialty.objects.all(),
+        empty_label=None,
+    )
+
+    salary_min = forms.DecimalField(
+        label=_('Зарплата от'),
+        min_value=0,
+        max_digits=15,
+        decimal_places=2,
+    )
+
+    salary_max = forms.DecimalField(
+        label=_('Зарплата до'),
+        min_value=0,
+        max_digits=15,
+        decimal_places=2,
+    )
+
+    skills = forms.CharField(
+        label=_('Требуемые навыки'),
+        widget=forms.Textarea(),
+    )
+
+    description = forms.CharField(
+        label=_('Описание вакансии'),
+        widget=forms.Textarea(),
+    )
 
     class Meta:
         model = Vacancy
-        fields = ['title']
+        fields = ['title', 'specialty', 'salary_min', 'salary_max', 'skills', 'description']
 
     def __init__(self, *args, **kwargs):
         super(MyVacancyForm, self).__init__(*args, **kwargs)
@@ -148,6 +160,29 @@ class MyVacancyForm(forms.ModelForm):
             Fieldset(
                 '',
                 'title',
+                'specialty',
+                'salary_min',
+                'salary_max',
+                'skills',
+                'description',
             ),
             ButtonHolder(Submit('submit', 'Сохранить'))
+        )
+
+
+class MyVacancyDeleteForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(MyVacancyDeleteForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+
+        self.helper.layout = Layout(
+            Fieldset(
+                f'Вы точно хотите удалить вакансию?',
+            ),
+            ButtonHolder(
+                Submit('submit', 'Удалить', css_class='btn-danger'),
+                Button('cancel', 'Не удалять', css_class='btn-primary', onclick="window.location.href = '{}';".format(reverse('my_company_vacancies_list')))
+            )
         )

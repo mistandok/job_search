@@ -5,7 +5,7 @@ from apps.jobsearch.views import (
     StartPageView, ListVacancyView, DetailVacancyView, DetailCompanyView,
     ListSpecialtyVacancyView, ApplicationView, MyCompanyCreateView, MyCompanyLetsStartView,
     MyCompanyUpdateView, MyCompanyVacanciesLetsStartView, MyCompanyVacanciesCreateView,
-    MyCompanyVacanciesListView
+    MyCompanyVacanciesListView, MyCompanyVacanciesUpdateView, MyCompanyVacanciesDeleteView
 )
 
 urlpatterns = [
@@ -28,4 +28,6 @@ urlpatterns += [
     path('mycompany/vacancies/letstart', MyCompanyVacanciesLetsStartView.as_view(), name='my_company_vacancies_lets_start'),
     path('mycompany/vacancies/create', MyCompanyVacanciesCreateView.as_view(), name='my_company_vacancies_create'),
     path('mycompany/vacancies/', MyCompanyVacanciesListView.as_view(), name='my_company_vacancies_list'),
+    path('mycompany/vacancies/<int:pk>', MyCompanyVacanciesUpdateView.as_view(), name='my_company_vacancies_update'),
+    path('mycompany/vacancies/<int:pk>/delete', MyCompanyVacanciesDeleteView.as_view(), name='my_company_vacancies_delete'),
 ]

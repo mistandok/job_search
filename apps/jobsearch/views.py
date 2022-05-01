@@ -1,14 +1,17 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Count
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.urls import reverse
+from django.utils.timezone import now
 from django.views.generic import ListView, DetailView, TemplateView
-from django.views.generic.edit import FormMixin, CreateView, UpdateView
+from django.views.generic.edit import FormMixin, CreateView, UpdateView, DeleteView
 
-from .forms import ApplicationForm, MyCompanyForm, MyVacancyForm
+from .forms import ApplicationForm, MyCompanyForm, MyVacancyForm, MyVacancyDeleteForm
+from .helpers.navigation import my_company_redirect_for_user, my_vacancy_redirect_for_user
 from .models import Vacancy, Company, Specialty
-from .services.helpers import my_company_redirect_for_user, my_vacancy_redirect_for_user
 
 
 class StartPageView(TemplateView):
@@ -110,6 +113,7 @@ class MyCompanyCreateView(LoginRequiredMixin, CreateView):
     login_url = 'login'
     template_name = 'jobsearch/company/company_edit.html'
 
+    model = Company
     form_class = MyCompanyForm
 
     @my_company_redirect_for_user(is_company_should_exist=True, redirect_to='my_company_edit')
@@ -125,9 +129,10 @@ class MyCompanyCreateView(LoginRequiredMixin, CreateView):
         return super(MyCompanyCreateView, self).form_valid(form)
 
 
-class MyCompanyUpdateView(LoginRequiredMixin, UpdateView):
+class MyCompanyUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     login_url = 'login'
     template_name = 'jobsearch/company/company_edit.html'
+    success_message = 'Компания обновлена'
 
     model = Company
     form_class = MyCompanyForm
@@ -157,6 +162,7 @@ class MyCompanyVacanciesCreateView(LoginRequiredMixin, CreateView):
     login_url = 'login'
     template_name = 'jobsearch/vacancy/company_vacancy_edit.html'
 
+    model = Vacancy
     form_class = MyVacancyForm
 
     @my_company_redirect_for_user(is_company_should_exist=False, redirect_to='my_company_edit')
@@ -164,11 +170,47 @@ class MyCompanyVacanciesCreateView(LoginRequiredMixin, CreateView):
         return super().get(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse('my_company_edit')
+        return reverse('my_company_vacancies_list')
 
     def form_valid(self, form):
-        return super(MyCompanyCreateView, self).form_valid(form)
+        form.instance.company = Company.objects.get(owner=self.request.user)
+        form.instance.published_at = now().date()
+        form.save()
+        return super(MyCompanyVacanciesCreateView, self).form_valid(form)
 
+
+class MyCompanyVacanciesUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+    login_url = 'login'
+    template_name = 'jobsearch/vacancy/company_vacancy_edit.html'
+    success_message = 'Вакансия обновлена'
+
+    model = Vacancy
+    form_class = MyVacancyForm
+
+    @my_company_redirect_for_user(is_company_should_exist=False, redirect_to='my_company_lets_start')
+    @my_vacancy_redirect_for_user(is_vacancies_should_exist=False, redirect_to='my_company_vacancies_lets_start')
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('my_company_vacancies_update', kwargs={'pk': self.get_object().pk})
+
+
+class MyCompanyVacanciesDeleteView(LoginRequiredMixin, DeleteView):
+    login_url = 'login'
+    template_name = 'jobsearch/vacancy/company_vacancy_delete.html'
+
+    model = Vacancy
+    form_class = MyVacancyDeleteForm
+
+    def get_object(self, queryset=None):
+        vacancy = super(MyCompanyVacanciesDeleteView, self).get_object(queryset)
+        if vacancy.company != Company.objects.get(owner=self.request.user):
+            raise Http404
+        return vacancy
+    
+    def get_success_url(self):
+        return reverse('my_company_vacancies_list')
 
 class MyCompanyVacanciesListView(LoginRequiredMixin, ListView):
     login_url = 'login'
@@ -182,7 +224,9 @@ class MyCompanyVacanciesListView(LoginRequiredMixin, ListView):
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
-        return super().get_queryset().filter(company__owner=self.request.user)
+        return (super().get_queryset().
+                annotate(count_applications=Count('applications')).
+                filter(company__owner=self.request.user))
 
 
 def handler404_view(request, *args, **kwargs):

@@ -15,17 +15,7 @@ class Company(models.Model):
 
 
 class Specialty (models.Model):
-    class SpecialtyChoises(models.TextChoices):
-        FRONTEND = 'frontend', 'Фронтенд'
-        BACKEND = 'backend', 'Бэкенд'
-        GAMEDEV = 'gamedev', 'Геймдев'
-        DEVOPS = 'devops', 'Девопс'
-        DESIGN = 'design', 'Дизайн'
-        PRODUCTS = 'products', 'Продукты'
-        MANAGEMENT = 'management', 'Менеджмент'
-        TESTING = 'testing', 'Тестирование'
-
-    code = models.CharField(max_length=15, unique=True, choices=SpecialtyChoises.choices)
+    code = models.CharField(max_length=15, unique=True)
     title = models.CharField(max_length=100)
     picture = models.ImageField(upload_to=settings.MEDIA_SPECIALITY_IMAGE_DIR)
 
@@ -33,6 +23,9 @@ class Specialty (models.Model):
         indexes = [
             models.Index(fields=['code']),
         ]
+
+    def __str__(self):
+        return f'{self.title}'
 
 
 class Vacancy(models.Model):

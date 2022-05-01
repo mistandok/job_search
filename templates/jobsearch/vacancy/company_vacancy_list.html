@@ -3,13 +3,12 @@
         <div class="col-12 col-lg-8">
             <div class="card">
                 <div class="card-body px-4 pb-4">
-                    <!-- Tab -->
                     <section class="tab-pane fade show active">
                         <h2 class="h4 pt-2 pb-3">Вакансии</h2>
+                        <a href="{% url 'my_company_vacancies_create' %}" class="btn btn-outline-primary">Создать</a>
                     </section>
 
-                    {% include 'jobsearch/vacancy/vacancies_list.html' %}
-
+                    {% include 'jobsearch/vacancy/company_vacancies_list.html' %}
                 </div>
             </div>
         </div>

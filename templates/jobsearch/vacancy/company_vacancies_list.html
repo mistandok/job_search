@@ -1,0 +1,23 @@
+<div class="row mt-5">
+    <div class="col-12 col-lg-8 offset-lg-2 m-auto">
+        {% for vacancy in vacancy_list %}
+        <div class="card mt-3">
+            <div class="card-body px-4">
+                <div class="row align-items-center">
+                    <div class="col-6 col-lg-8">
+                        <a href="{% url 'vacancy_detail' pk=vacancy.pk %}" class="mb-1">{{ vacancy.title }}</a>
+                        <p class="mb-1">
+                            {% load jobsearch_extras %}
+                            <span class="mr-4">{{ vacancy.salary_max }}</span><a href="#" class="text-info">{% if vacancy.count_applications %}{{ vacancy.count_applications }} {{ vacancy.count_applications|plural_ru:"отклик" }}{% else %}Нет откликов{% endif %}</a>
+                        </p>
+                    </div>
+                    <div class="col-6 col-lg-4 text-right">
+                        <a href="{% url 'my_company_vacancies_update' pk=vacancy.pk %}" class="btn btn-outline-info">Изменить</a>
+                        <a href="{% url 'my_company_vacancies_delete' pk=vacancy.pk %}" class="btn btn-outline-danger">Удалить</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
