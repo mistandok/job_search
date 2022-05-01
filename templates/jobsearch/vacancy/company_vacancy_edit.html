@@ -12,6 +12,11 @@
 
                     {% crispy form %}
                     <!-- END Tab -->
+                    {% if vacancy.count_applications %}
+                    <h2 class="h4 pt-2 pb-3">Отклики - {{ vacancy.count_applications }}</h2>
+
+                    {% include 'jobsearch/application/applications_list.html' %}
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -192,8 +192,22 @@ class MyCompanyVacanciesUpdateView(LoginRequiredMixin, SuccessMessageMixin, Upda
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
+    def get_queryset(self):
+        return super(MyCompanyVacanciesUpdateView, self).get_queryset().annotate(count_applications=Count('applications'))
+
+    def get_object(self, queryset=None):
+        vacancy = super(MyCompanyVacanciesUpdateView, self).get_object(queryset)
+        if vacancy.company != Company.objects.get(owner=self.request.user):
+            raise Http404
+        return vacancy
+
     def get_success_url(self):
         return reverse('my_company_vacancies_update', kwargs={'pk': self.get_object().pk})
+
+    def get_context_data(self, **kwargs):
+        context = super(MyCompanyVacanciesUpdateView, self).get_context_data(**kwargs)
+        context['application_list'] = self.get_object().applications.all()
+        return context
 
 
 class MyCompanyVacanciesDeleteView(LoginRequiredMixin, DeleteView):
@@ -208,9 +222,10 @@ class MyCompanyVacanciesDeleteView(LoginRequiredMixin, DeleteView):
         if vacancy.company != Company.objects.get(owner=self.request.user):
             raise Http404
         return vacancy
-    
+
     def get_success_url(self):
         return reverse('my_company_vacancies_list')
+
 
 class MyCompanyVacanciesListView(LoginRequiredMixin, ListView):
     login_url = 'login'
