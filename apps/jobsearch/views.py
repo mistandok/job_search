@@ -125,7 +125,6 @@ class MyCompanyCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        form.save()
         return super(MyCompanyCreateView, self).form_valid(form)
 
 
@@ -175,7 +174,6 @@ class MyCompanyVacanciesCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.company = Company.objects.get(owner=self.request.user)
         form.instance.published_at = now().date()
-        form.save()
         return super(MyCompanyVacanciesCreateView, self).form_valid(form)
 
 
