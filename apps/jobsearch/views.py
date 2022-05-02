@@ -18,9 +18,8 @@ from .models import Vacancy, Company, Specialty, Resume
 from .services.api import get_vacancies_by_search_filter
 
 
-class StartPageView(FormMixin, TemplateView):
+class StartPageView(TemplateView):
     template_name = 'jobsearch/index.html'
-    form_class = SearchForm
 
     def get_context_data(self, **kwargs):
         context = super(StartPageView, self).get_context_data(**kwargs)

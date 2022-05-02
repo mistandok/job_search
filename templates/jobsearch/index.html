@@ -4,9 +4,17 @@
     <h1 class="h1 text-center mx-auto mt-4 py-5"><strong>Вакансии для <br>Junior-разработчиков</strong></h1>
     <div class="row">
         <div class="col-12 col-md-8 col-lg-6 offset-lg-3 offset-md-2">
-            {% load crispy_forms_tags %}
-
-            {% crispy form %}
+            <form class="form-inline mb-3" enctype="multipart/form-data" action="{% url 'search_vacancies' %}" method="GET">
+                <div class="form-group col-8 col-md-10 pl-0">
+                    <input name="search_filter" class="form-control w-100" type="search" placeholder="Найти работу или стажировку" aria-label="Найти работу или стажировку">
+                </div>
+                <div class="form-group col-4 col-md-2 pl-0">
+                    <button class="btn btn-primary w-100" type="submit">Найти</button>
+                </div>
+            </form>
+{#            {% load crispy_forms_tags %}#}
+{##}
+{#            {% crispy form %}#}
 
             <p>Например:
                 {% for search_example in search_examples %}
