@@ -58,3 +58,28 @@ class Application(models.Model):
 
     class Meta:
         unique_together = ('vacancy', 'user',)
+
+
+class Resume(models.Model):
+    SEARCH_STATES = (
+        ('SEARCH_JOB', 'Ищу работу'),
+        ('DONT_SEARCH_JOB', 'Не ищу работу'),
+        ('OPREN_TO_OFFERS', 'Открыт к предложениям')
+    )
+
+    QUALIFICATIONS = (
+        ('JUNIOR', 'Младший (Junior)'),
+        ('MIDDLE', 'Средний (Middle)'),
+        ('SENIOR', 'Старший (Senior)'),
+    )
+
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    search_state = models.CharField(max_length=50, choices=SEARCH_STATES)
+    qualification = models.CharField(max_length=50, choices=QUALIFICATIONS)
+    expected_salary = models.DecimalField(max_digits=15, decimal_places=2)
+    specialty = models.ForeignKey(Specialty, on_delete=models.SET_NULL, related_name='resumes', null=True)
+    education = models.TextField()
+    experience = models.TextField()
+    link_to_portfolio = models.URLField()
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='resumes')

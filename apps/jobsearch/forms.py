@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from .models import Application, Company, Vacancy, Specialty
+from .models import Application, Company, Vacancy, Specialty, Resume
 
 
 class ApplicationForm(forms.ModelForm):
@@ -206,4 +206,82 @@ class SearchForm(forms.Form):
                 # BaseInput(name='search', value='Найти по ключевому слову'),
                 Submit('submit', 'Найти', css_class='btn-primary'),
             )
+        )
+
+
+class MyResumeForm(forms.ModelForm):
+    first_name = forms.CharField(
+        label=_('Имя'),
+        max_length=100,
+    )
+
+    last_name = forms.CharField(
+        label=_('Фамилия'),
+        max_length=100,
+    )
+
+    search_state = forms.ChoiceField(
+        label=_('Готовность к работе'),
+    )
+
+    expected_salary = forms.DecimalField(
+        label=_('Ожидаемое вознаграждение'),
+        min_value=0,
+        max_digits=15,
+        decimal_places=2,
+    )
+
+    specialty = forms.ModelChoiceField(
+        label=_('Специализация'),
+        queryset=Specialty.objects.all(),
+        empty_label='Не указано',
+    )
+
+    qualification = forms.CharField(
+        label=_('Требуемые навыки'),
+        widget=forms.Textarea(),
+    )
+
+    education = forms.CharField(
+        label=_('Образование'),
+        widget=forms.Textarea(),
+    )
+
+    experience = forms.CharField(
+        label=_('Опыт работы'),
+        widget=forms.Textarea(),
+    )
+
+    link_to_portfolio = forms.URLField(
+        label=_('Ссылка на портфолио')
+    )
+
+    class Meta:
+        model = Resume
+        fields = [
+            'first_name', 'last_name', 'search_state',
+            'education', 'experience', 'link_to_portfolio',
+            'specialty', 'expected_salary', 'qualification'
+        ]
+
+    def __init__(self, *args, **kwargs):
+        super(MyVacancyForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_method = 'post'
+
+        self.helper.layout = Layout(
+            Fieldset(
+                '',
+                'first_name',
+                'last_name',
+                'search_state',
+                'expected_salary',
+                'specialty',
+                'qualification',
+                'education',
+                'experience',
+                'link_to_portfolio',
+            ),
+            ButtonHolder(Submit('submit', 'Сохранить'))
         )
