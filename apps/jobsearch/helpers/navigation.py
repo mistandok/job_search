@@ -11,12 +11,21 @@ from ..models import Company, Vacancy, Resume
 
 
 class ObjectExistForUserChecker(ABC):
+    """
+    Класс должен осуществлять проверку на то, что интересуемый объект существует для пользователя
+    """
     @abstractmethod
-    def __call__(self, user: User):
+    def __call__(self, user: User) -> bool:
+        """
+        Метод проверяет, что для пользователя существует требуемый объект.
+        """
         pass
 
 
 class CompanyExistForUserChecker(ObjectExistForUserChecker):
+    """
+    Класс проверяет, что для пользователя существует компания.
+    """
     def __call__(self, user: User):
         try:
             Company.objects.get(owner=user)
@@ -26,6 +35,9 @@ class CompanyExistForUserChecker(ObjectExistForUserChecker):
 
 
 class VacancyExistForUserChecker(ObjectExistForUserChecker):
+    """
+    Класс проверяет, что для пользователя существуют вакансии.
+    """
     def __call__(self, user: User):
         if Vacancy.objects.filter(company__owner=user).exists():
             return True
@@ -33,6 +45,9 @@ class VacancyExistForUserChecker(ObjectExistForUserChecker):
 
 
 class ResumeExistForUserChecker(ObjectExistForUserChecker):
+    """
+    Класс проверяет, что для пользователя существует резюме.
+    """
     def __call__(self, user: User):
         try:
             Resume.objects.get(owner=user)
