@@ -9,9 +9,10 @@ from django.utils.timezone import now
 from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import FormMixin, CreateView, UpdateView, DeleteView
 
-from .forms import ApplicationForm, MyCompanyForm, MyVacancyForm, MyVacancyDeleteForm
+from .forms import ApplicationForm, MyCompanyForm, MyVacancyForm, MyVacancyDeleteForm, SearchForm
 from .helpers.navigation import my_company_redirect_for_user, my_vacancy_redirect_for_user, is_correct_company_for_user
 from .models import Vacancy, Company, Specialty
+from .services.api import get_vacancies_by_search_filter
 
 
 class StartPageView(TemplateView):
@@ -31,6 +32,23 @@ class ListVacancyView(ListView):
 
     def get_queryset(self):
         return super().get_queryset().select_related()
+
+
+class SearchListVacancyView(FormMixin, ListView):
+    template_name = 'jobsearch/vacancy/search_vacancies.html'
+    form_class = SearchForm
+    model = Vacancy
+
+    def get_queryset(self):
+        get_request = self.request.GET
+        vacancies = get_vacancies_by_search_filter(get_request.get('search_filter', ''))
+        return vacancies
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        get_request = self.request.GET
+        kwargs['search_filter'] = get_request.get('search_filter', '')
+        return kwargs
 
 
 class ListSpecialtyVacancyView(ListView):

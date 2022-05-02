@@ -1,0 +1,20 @@
+{% extends 'jobsearch/base.html' %}
+{% block content %}
+<section>
+    {% load crispy_forms_tags %}
+    {% load jobsearch_extras %}
+
+    <div class="row">
+        <div class="col-md-7 col-lg-5 col-xl-4 col-sm-8 mx-auto">
+
+        {% crispy form %}
+
+        </div>
+    </div>
+
+    <p class="text-center pt-1">{{ vacancy_list.count }} {{ vacancy_list.count|plural_ru:"вакансия" }}</p>
+
+    {% include 'jobsearch/vacancy/vacancies_list.html' %}
+
+</section>
+{% endblock %}
