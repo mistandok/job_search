@@ -35,7 +35,7 @@ class VacancyExistForUserChecker(ObjectExistForUserChecker):
 class ResumeExistForUserChecker(ObjectExistForUserChecker):
     def __call__(self, user: User):
         try:
-            Resume.objects.get(user=user)
+            Resume.objects.get(owner=user)
             return True
         except ObjectDoesNotExist:
             return False

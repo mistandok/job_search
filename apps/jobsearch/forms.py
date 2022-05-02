@@ -222,6 +222,7 @@ class MyResumeForm(forms.ModelForm):
 
     search_state = forms.ChoiceField(
         label=_('Готовность к работе'),
+        choices=Resume.SEARCH_STATES,
     )
 
     expected_salary = forms.DecimalField(
@@ -237,9 +238,9 @@ class MyResumeForm(forms.ModelForm):
         empty_label='Не указано',
     )
 
-    qualification = forms.CharField(
+    qualification = forms.ChoiceField(
         label=_('Требуемые навыки'),
-        widget=forms.Textarea(),
+        choices=Resume.QUALIFICATIONS,
     )
 
     education = forms.CharField(
@@ -265,7 +266,7 @@ class MyResumeForm(forms.ModelForm):
         ]
 
     def __init__(self, *args, **kwargs):
-        super(MyVacancyForm, self).__init__(*args, **kwargs)
+        super(MyResumeForm, self).__init__(*args, **kwargs)
 
         self.helper = FormHelper()
         self.helper.form_method = 'post'

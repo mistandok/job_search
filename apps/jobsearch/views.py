@@ -9,10 +9,12 @@ from django.utils.timezone import now
 from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import FormMixin, CreateView, UpdateView, DeleteView
 
-from .forms import ApplicationForm, MyCompanyForm, MyVacancyForm, MyVacancyDeleteForm, SearchForm
+from .forms import ApplicationForm, MyCompanyForm, MyVacancyForm, MyVacancyDeleteForm, SearchForm, MyResumeForm
 from .helpers.navigation import (
-    redirect_for_user, CompanyExistForUserChecker, VacancyExistForUserChecker, is_correct_company_for_user)
-from .models import Vacancy, Company, Specialty
+    redirect_for_user, CompanyExistForUserChecker, VacancyExistForUserChecker, ResumeExistForUserChecker,
+    is_correct_company_for_user
+)
+from .models import Vacancy, Company, Specialty, Resume
 from .services.api import get_vacancies_by_search_filter
 
 
@@ -307,12 +309,58 @@ class MyResumeLetsStartView(LoginRequiredMixin, TemplateView):
     template_name = 'jobsearch/resume/resume_letsstart.html'
 
     @redirect_for_user(
-        is_object_should_exist=False,
-        redirect_to='my_company_edit',
-        object_exists_for_user_checker=CompanyExistForUserChecker()
+        is_object_should_exist=True,
+        redirect_to='my_resume_edit',
+        object_exists_for_user_checker=ResumeExistForUserChecker()
     )
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
+
+
+class MyResumeCreateView(LoginRequiredMixin, CreateView):
+    login_url = 'login'
+    template_name = 'jobsearch/resume/resume_edit.html'
+
+    model = Resume
+    form_class = MyResumeForm
+
+    @redirect_for_user(
+        is_object_should_exist=True,
+        redirect_to='my_resume_edit',
+        object_exists_for_user_checker=ResumeExistForUserChecker()
+    )
+    def get(self, request, *args, **kwargs):
+        return super(MyResumeCreateView, self).get(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse('my_resume_edit')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(MyResumeCreateView, self).form_valid(form)
+
+
+class MyResumeUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+    login_url = 'login'
+    template_name = 'jobsearch/resume/resume_edit.html'
+    success_message = 'Резюме обновлено'
+
+    model = Resume
+    form_class = MyResumeForm
+
+    @redirect_for_user(
+        is_object_should_exist=False,
+        redirect_to='my_resume_lets_start',
+        object_exists_for_user_checker=ResumeExistForUserChecker()
+    )
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
+    def get_object(self, queryset=None):
+        return self.model.objects.get(owner=self.request.user)
+
+    def get_success_url(self):
+        return reverse('my_resume_edit')
 
 
 def handler404_view(request, *args, **kwargs):

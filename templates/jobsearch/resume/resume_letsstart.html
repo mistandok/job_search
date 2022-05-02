@@ -1,20 +1,12 @@
-{% extends 'jobsearch/edit.html' %}
-{% block edit_content %}
-        <div class="col-12 col-lg-8">
-            <div class="card">
-                <div class="card-body px-4 pb-4">
-                    <!-- Tab -->
-                    <section class="tab-pane fade show active">
-                        <h2 class="h4 pt-2 pb-3">Мое резюме</h2>
-                    </section>
-                    <p class="alert alert-info" role="alert">
-                    У вас нет резюме. Хотите создать его?
-                    </p>
-                    <a href="{% url 'my_resume_create' %}" class="btn btn-info mb-2">Создать резюме</a>
-                    <!-- END Tab -->
-                </div>
-            </div>
+{% extends 'jobsearch/base.html' %}
+{% block content %}
+<main class="container mt-3 pb-5">
+    <section class="col-12 col-lg-6 offset-lg-3 mt-5 card">
+        <div class="card-body px-3 pb-4">
+            <h1 class="h4 pt-2">Мое резюме</h1>
+            <p class="mt-2">У вас нет резюме. Хотите создать его?</p>
+            <a href="{% url 'my_resume_create' %}" class="btn btn-info mb-2">Создать резюме</a>
         </div>
-    </div>
-  </main>
+    </section>
+</main>
 {% endblock %}

@@ -82,4 +82,4 @@ class Resume(models.Model):
     education = models.TextField()
     experience = models.TextField()
     link_to_portfolio = models.URLField()
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='resumes')
+    owner = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='resumes')
