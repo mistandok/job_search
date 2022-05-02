@@ -17,7 +17,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path, include
 
-from apps.jobsearch.views import handler404_view, handler500_view
+from apps.jobsearch.views.handlers_views import handler404_view, handler500_view
 
 urlpatterns = [
     path('', include('apps.jobsearch.urls')),

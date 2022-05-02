@@ -1,12 +1,16 @@
 from django.contrib import admin
 from django.urls import path
 
-from apps.jobsearch.views import (
-    StartPageView, ListVacancyView, DetailVacancyView, DetailCompanyView,
-    ListSpecialtyVacancyView, ApplicationView, MyCompanyCreateView, MyCompanyLetsStartView,
-    MyCompanyUpdateView, MyCompanyVacanciesLetsStartView, MyCompanyVacanciesCreateView,
-    MyCompanyVacanciesListView, MyCompanyVacanciesUpdateView, MyCompanyVacanciesDeleteView,
-    SearchListVacancyView, MyResumeLetsStartView, MyResumeCreateView, MyResumeUpdateView
+from apps.jobsearch.views.base_views import (
+    StartPageView, ListVacancyView, ListSpecialtyVacancyView,
+    DetailVacancyView, ApplicationView, SearchListVacancyView,
+    DetailCompanyView
+)
+from apps.jobsearch.views.my_company_views import MyCompanyCreateView, MyCompanyLetsStartView, MyCompanyUpdateView
+from apps.jobsearch.views.my_resume_views import MyResumeLetsStartView, MyResumeCreateView, MyResumeUpdateView
+from apps.jobsearch.views.my_vacancies_views import (
+    MyCompanyVacanciesLetsStartView, MyCompanyVacanciesCreateView, MyCompanyVacanciesListView,
+    MyCompanyVacanciesUpdateView, MyCompanyVacanciesDeleteView
 )
 
 urlpatterns = [
