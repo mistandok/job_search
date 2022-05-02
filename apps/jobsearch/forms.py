@@ -1,5 +1,5 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Button
+from crispy_forms.layout import Layout, Fieldset, ButtonHolder, Submit, Button, BaseInput
 from django import forms
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
@@ -184,5 +184,26 @@ class MyVacancyDeleteForm(forms.Form):
             ButtonHolder(
                 Submit('submit', 'Удалить', css_class='btn-danger'),
                 Button('cancel', 'Не удалять', css_class='btn-primary', onclick="window.location.href = '{}';".format(reverse('my_company_vacancies_list')))
+            )
+        )
+
+
+class SearchForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.search_filter = kwargs.pop('search_filter', '')
+
+        super(SearchForm, self).__init__(self, *args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_method = 'get'
+
+        self.helper.layout = Layout(
+            Fieldset(
+                'Найти вакансию',
+                BaseInput(name='search_filter', value=self.search_filter),
+            ),
+            ButtonHolder(
+                # BaseInput(name='search', value='Найти по ключевому слову'),
+                Submit('submit', 'Найти', css_class='btn-primary'),
             )
         )
