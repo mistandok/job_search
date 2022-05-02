@@ -193,7 +193,7 @@ class SearchForm(forms.Form):
         self.search_filter = kwargs.pop('search_filter', '')
 
         super(SearchForm, self).__init__(self, *args, **kwargs)
-        
+
         self.helper = FormHelper()
         self.helper.form_method = 'get'
 
