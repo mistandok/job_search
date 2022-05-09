@@ -1,5 +1,4 @@
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import Count
 from django.http import Http404
@@ -32,7 +31,7 @@ from ..models import Vacancy, Company
     ),
     name='dispatch'
 )
-class MyCompanyVacanciesLetsStartView(LoginRequiredMixin, TemplateView):
+class MyCompanyVacanciesLetsStartView(TemplateView):
     login_url = 'login'
     template_name = 'jobsearch/vacancy/company_vacancy_letstart.html'
 
@@ -46,7 +45,7 @@ class MyCompanyVacanciesLetsStartView(LoginRequiredMixin, TemplateView):
     ),
     name='dispatch'
 )
-class MyCompanyVacanciesCreateView(LoginRequiredMixin, CreateView):
+class MyCompanyVacanciesCreateView(CreateView):
     login_url = 'login'
     template_name = 'jobsearch/vacancy/company_vacancy_edit.html'
 
@@ -79,7 +78,7 @@ class MyCompanyVacanciesCreateView(LoginRequiredMixin, CreateView):
     ,
     name='dispatch'
 )
-class MyCompanyVacanciesUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class MyCompanyVacanciesUpdateView(SuccessMessageMixin, UpdateView):
     login_url = 'login'
     template_name = 'jobsearch/vacancy/company_vacancy_edit.html'
     success_message = 'Вакансия обновлена'
@@ -106,7 +105,7 @@ class MyCompanyVacanciesUpdateView(LoginRequiredMixin, SuccessMessageMixin, Upda
 
 
 @method_decorator(login_required(login_url='/login/'), name='dispatch')
-class MyCompanyVacanciesDeleteView(LoginRequiredMixin, DeleteView):
+class MyCompanyVacanciesDeleteView(DeleteView):
     login_url = 'login'
     template_name = 'jobsearch/vacancy/company_vacancy_delete.html'
 
@@ -140,7 +139,7 @@ class MyCompanyVacanciesDeleteView(LoginRequiredMixin, DeleteView):
     ),
     name='dispatch'
 )
-class MyCompanyVacanciesListView(LoginRequiredMixin, ListView):
+class MyCompanyVacanciesListView(ListView):
     login_url = 'login'
     template_name = 'jobsearch/vacancy/company_vacancy_list.html'
 
