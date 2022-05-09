@@ -59,7 +59,7 @@ class ResumeExistForUserChecker(ObjectExistForUserChecker):
 def redirect_for_user(
         is_object_should_exist: bool,
         redirect_to: str,
-        object_exists_for_user_checker: ObjectExistForUserChecker
+        object_exists_checker: ObjectExistForUserChecker
 ):
     """
     Декоратор отвечает за перенаправление запросов для вьюх. Вешается на метод Get
@@ -67,15 +67,15 @@ def redirect_for_user(
     True - для перенаправления на новую View объект должен существовать для пользователя
     False - для перенаправления на новую View объект не должен сущуствовать для пользователя
     :param redirect_to: название View, куда нужно перенаправть запрос.
-    :param object_exists_for_user_checker: проверяет, что объект существует для пользователя
+    :param object_exists_checker: проверяет, что объект существует для пользователя
     """
     def decorator(func):
-        def wrapper(self, request, *args, **kwargs):
-            is_object_exists = object_exists_for_user_checker(request.user)
+        def wrapper(request, *args, **kwargs):
+            is_object_exists = object_exists_checker(request.user)
             if is_object_should_exist:
-                return redirect(redirect_to) if is_object_exists else func(self, request, *args, **kwargs)
+                return redirect(redirect_to) if is_object_exists else func(request, *args, **kwargs)
             else:
-                return func(self, request, *args, **kwargs) if is_object_exists else redirect(redirect_to)
+                return func(request, *args, **kwargs) if is_object_exists else redirect(redirect_to)
 
         return wrapper
     return decorator

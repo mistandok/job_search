@@ -31,7 +31,7 @@ urlpatterns += [
 ]
 
 urlpatterns += [
-    path('mycompany/vacancies/letstart', MyCompanyVacanciesLetsStartView.as_view(), name='my_company_vacancies_lets_start'),
+    path('mycompany/vacancies/letsstart', MyCompanyVacanciesLetsStartView.as_view(), name='my_company_vacancies_lets_start'),
     path('mycompany/vacancies/create', MyCompanyVacanciesCreateView.as_view(), name='my_company_vacancies_create'),
     path('mycompany/vacancies/', MyCompanyVacanciesListView.as_view(), name='my_company_vacancies_list'),
     path('mycompany/vacancies/<int:pk>', MyCompanyVacanciesUpdateView.as_view(), name='my_company_vacancies_update'),

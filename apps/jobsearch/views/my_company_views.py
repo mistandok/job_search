@@ -1,6 +1,7 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView, UpdateView
 
@@ -11,33 +12,35 @@ from ..helpers.navigation import (
 from ..models import Company
 
 
-class MyCompanyLetsStartView(LoginRequiredMixin, TemplateView):
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
+@method_decorator(
+    redirect_for_user(
+        is_object_should_exist=True,
+        redirect_to='my_company_edit',
+        object_exists_checker=CompanyExistForUserChecker()
+    ),
+    name='dispatch'
+)
+class MyCompanyLetsStartView(TemplateView):
     login_url = 'login'
     template_name = 'jobsearch/company/company_create.html'
 
-    @redirect_for_user(
+
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
+@method_decorator(
+    redirect_for_user(
         is_object_should_exist=True,
         redirect_to='my_company_edit',
-        object_exists_for_user_checker=CompanyExistForUserChecker()
-    )
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
-
-
-class MyCompanyCreateView(LoginRequiredMixin, CreateView):
+        object_exists_checker=CompanyExistForUserChecker()
+    ),
+    name='dispatch'
+)
+class MyCompanyCreateView(CreateView):
     login_url = 'login'
     template_name = 'jobsearch/company/company_edit.html'
 
     model = Company
     form_class = MyCompanyForm
-
-    @redirect_for_user(
-        is_object_should_exist=True,
-        redirect_to='my_company_edit',
-        object_exists_for_user_checker=CompanyExistForUserChecker()
-    )
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse('my_company_edit')
@@ -47,21 +50,22 @@ class MyCompanyCreateView(LoginRequiredMixin, CreateView):
         return super(MyCompanyCreateView, self).form_valid(form)
 
 
-class MyCompanyUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+@method_decorator(login_required(login_url='/login/'), name='dispatch')
+@method_decorator(
+    redirect_for_user(
+        is_object_should_exist=False,
+        redirect_to='my_company_lets_start',
+        object_exists_checker=CompanyExistForUserChecker()
+    ),
+    name='dispatch'
+)
+class MyCompanyUpdateView(SuccessMessageMixin, UpdateView):
     login_url = 'login'
     template_name = 'jobsearch/company/company_edit.html'
     success_message = 'Компания обновлена'
 
     model = Company
     form_class = MyCompanyForm
-
-    @redirect_for_user(
-        is_object_should_exist=False,
-        redirect_to='my_company_lets_start',
-        object_exists_for_user_checker=CompanyExistForUserChecker()
-    )
-    def get(self, request, *args, **kwargs):
-        return super().get(request, *args, **kwargs)
 
     def get_object(self, queryset=None):
         return self.model.objects.get(owner=self.request.user)
